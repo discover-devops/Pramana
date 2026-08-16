@@ -1,6 +1,9 @@
 # Prompt Chain: Build Your Own Options Trading System (India) with Claude
 
-**How to use this:** Copy Prompt 1 into a new Claude chat. Answer what it asks. Then paste Prompt 2 into the *same conversation* (don't start a new chat — Claude needs the earlier context). Keep going through Prompt 6. Each prompt builds on the last, so skipping ahead will give you a weaker, more generic system.
+**How to use this:** 
+Copy Prompt 1 into a new Claude chat. Answer what it asks. Then paste Prompt 
+2 into the *same conversation* (don't start a new chat — Claude needs the earlier context). 
+Keep going through Prompt 6. Each prompt builds on the last, so skipping ahead will give you a weaker, more generic system.
 
 ---
 
