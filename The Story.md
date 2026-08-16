@@ -1,811 +1,804 @@
-# Pramana — building an options system that told me "no"
+# The day my own system told me "no"
 
-**A one-day build log: from "what is a covered call?" to a tested null result.**
+*How I stopped looking for a strategy and started looking for the truth*
 
-*Rahul Chaubey · 16 August 2026*
-
----
-
-## Why this document exists
-
-Here's the rewrite, in your voice:
+**Rahul Chaubey · August 2026**
 
 ---
 
-## Why this document exists
+## First, let me describe you
 
-Everybody wants a strategy.
+It's 11:30 at night. You're on YouTube.
 
-We all carry the same belief: that somewhere out there is the right strategy, and the day I find it, my problems are solved. So we watch a hundred YouTube videos looking for the magic thing. 
+The title says something like *"This options strategy has 90% win rate."* You click.
+The man on screen is confident. He shows a chart. He shows a payoff diagram. Green
+everywhere. He says he has been doing this for years.
 
-Especially in option trading. And every few weeks you hear something in a video or a podcast and you think: **yes. This is it. This is the thing I was looking for.**
+And something inside you goes: **yes. This is it. This is what I was missing.**
 
-Then you start implementing it. You take a few losses. And you simply stop.
+You write it down. Maybe you make a note in your phone. You feel good. Tomorrow you
+will start.
 
-Why does that happen? Not because the strategy was bad. Sometimes it's a strategy that genuinely works for the person teaching it. It happens because **you never saw the evidence that made it credible.** You inherited someone else's conclusion without their reasoning. So the first time it hurts, you have nothing to hold on to — no reason to believe the drawdown is normal rather than fatal.
+Next day you take the trade. Maybe it works. You feel like a genius.
 
-That's why I won't teach you a strategy.
+Then in the second month, or the third, one trade goes wrong. Then another. You are
+down ₹40,000. Your stomach feels tight. You start checking the phone every ten
+minutes.
 
-What actually transfers is the **process**. Learning to build a system that tells you the truth — including when the truth is disappointing. If you know these things before you place a single real trade, then you've learnt something that survives the drawdown.
+And then you stop. You just... stop. The strategy goes into the same folder as the
+last five strategies.
 
-That's what I'm trying to share here.
+Two weeks later you are back on YouTube at 11:30 at night.
 
-What I can share is a **thought process** — how to go from a vague idea to a
-system that tells you the truth, including when the truth is disappointing.
-
-This is the log of one day. The honest headline:
-
-> **We built the system, tested it properly on five years of NSE data, and found
-> no statistically significant edge.** The result turned out to be decided almost
-> entirely by execution cost — a number that historical data physically cannot
-> contain.
-
-That's not a failure. That's the system working. A backtest that says "yes" to
-everything is a backtest that hasn't been asked hard questions.
+**I am not describing you to insult you. I am describing myself.** I have done this.
+Many times.
 
 ---
 
-## Part 1 — The question I started with
+## Why does this keep happening?
 
-I wanted to understand **covered calls**. You own the shares, you sell a call
-against them, you keep the premium.
+For a long time I thought the problem was that I kept picking bad strategies.
 
-The mechanics were easy. The problem showed up when I described what I actually
-wanted:
+It isn't.
 
-> *"I want to buy fundamentally strong stocks, hold them for my children, and
-> earn premium on top."*
+Some of those strategies were genuinely good. They worked for the person teaching
+them. The problem was something else, and it took me years to see it:
 
-Both halves of that sentence are reasonable. Together they contradict each other.
+> **I only got the answer. I never got the reasons.**
 
-### The contradiction
+Think about it. That man on YouTube — he probably lost money for three years before
+he found that setup. He has seen it fail fifty times. He knows what a normal bad
+month looks like for that strategy. He knows when to hold and when to run.
 
-If a stock runs to 1700 and my call was at 1550, I get assigned. I keep the
-premium, so my statement shows a profit. But I no longer own the shares — and to
-own them again I must pay 1700.
+You got none of that. You got the last slide of his ten-year journey.
 
-**Same rupees, fewer shares.**
+So when you are down ₹40,000, you have no way to answer the only question that
+matters: **is this normal, or is this the end?**
 
-A generational holding is bought precisely *for* the big multi-year moves.
-Covered calls systematically sell those moves away. Over ten years the premium
-income rarely compensates for missing two or three of the large legs up, because
-those legs are where nearly all the compounding happens.
+He knows. You don't. So you stop.
 
-Then the tax layer makes it worse in India:
-- Every assignment is a sale → triggers LTCG and **resets the holding period**
-- A share held untouched for 15 years is taxed **once**
-- The same share written and re-bought 40 times is taxed **40 times**
-
-### First real lesson
-
-> **Options income and long-term compounding pull against each other.**
-> No clever leg structure fixes this. You have to separate the money.
+That is not weak. That is sensible. You *should* stop when you don't know what is
+happening. The mistake was starting without knowing.
 
 ---
 
-## Part 2 — Checking whether I needed options at all
+## So I stopped asking for strategies
 
-Before designing anything, one arithmetic check.
+I decided to do something different.
 
-**Goal:** ₹1 crore → ₹5 crore for my children.
+Not "find a strategy." Instead: **build a system that tells me the truth about a
+strategy — before I risk one rupee.**
 
-| Horizon | Required CAGR |
+Including when the truth is bad news.
+
+That is what this document is about. One day of work. Five years of NSE data. And an
+answer I did not want.
+
+Let me tell you the whole thing honestly, including the mistakes. Especially the
+mistakes.
+
+---
+
+## Part 1 — It started with a simple question
+
+I wanted to understand **covered calls**.
+
+Simple idea. You own shares of a company. You sell a call option on them. Somebody
+pays you money today. If the stock stays below your strike price, you keep that
+money. Do it every month, earn extra income on shares you were going to hold anyway.
+
+Sounds beautiful. Free money on top of your investments.
+
+Then I said out loud what I actually wanted:
+
+> *"I want to buy good companies, hold them forever for my children, and earn some
+> premium on top."*
+
+Both halves sound sensible. Read them again together.
+
+They are fighting each other.
+
+---
+
+## Part 2 — The thing nobody tells you about covered calls
+
+Let's use real numbers.
+
+You own Reliance at 1500. You sell the 1550 call and collect ₹25.
+
+Now Reliance runs to 1700.
+
+Your shares get taken away at 1550. You keep the ₹25.
+
+Look at your account. You made money! ₹75 profit. Statement looks green.
+
+**But where are your shares?**
+
+Gone. And if you want them back, you now pay 1700 for what you sold at 1550.
+
+You have the same rupees. You have fewer shares.
+
+### Why this matters so much
+
+Think about why you bought that stock for your children in the first place. You
+bought it for the **big move**. The 5x over fifteen years.
+
+Covered calls sell exactly that away. Every single time the stock has a strong
+month, you get taken out. Every time you come back, you pay more.
+
+You collect ₹25 forty times. And you miss the one move that was worth ₹800.
+
+### And then tax comes
+
+In India it gets worse.
+
+Every time your shares get called away, that is a **sale**. Tax event. And your
+holding period **resets to zero**.
+
+- Hold a share quietly for 15 years → you pay tax **once**, at the end.
+- Sell and rebuy it 40 times → you pay tax **40 times**.
+
+That difference compounds against you for fifteen years.
+
+**Lesson one, and it has nothing to do with options:**
+
+> Earning income and building long-term wealth pull in opposite directions.
+> No clever adjustment fixes this. You have to keep the two pots of money separate.
+
+---
+
+## Part 3 — Then I asked myself an uncomfortable question
+
+Before designing anything, I sat down and did one small calculation.
+
+My actual goal: turn ₹1 crore into ₹5 crore for my children.
+
+How much return do I need?
+
+| Time I have | Return needed per year |
 |---|---|
 | 10 years | 17.5% |
 | 15 years | 11.3% |
 | 18 years | 9.4% |
 
-With a 15-year horizon, I need roughly **what a Nifty index fund has historically
-delivered**. No options required.
+I have about fifteen years.
 
-That was worth sitting with. I was about to design a complex machine to reach a
-target that a boring one already reaches.
+**11.3% per year.**
 
-### The structure I settled on
+Now here is the uncomfortable part. That is roughly what a plain Nifty index fund
+has given historically. No options. No screens. No 2 PM entry. Nothing.
 
-- **~70% generational core** — index funds / quality businesses. **Never write a
-  single call against it.** Its job is to capture the big moves.
-- **~30% income sleeve** — this is where systematic option selling runs, on
-  positions I'm genuinely indifferent about losing.
+I was about to build a complicated machine to reach a place a boring one already
+reaches.
 
-The two buckets never touch. That separation is the whole risk-management design.
+I want you to actually stop and do this calculation for yourself before reading
+further. Most people never do it. They assume they need something clever, and then
+they go looking for clever.
 
----
+### What I did instead
 
-## Part 3 — What the research actually says about covered calls
+I split the money into two buckets that never touch:
 
-I checked rather than assumed. The evidence is period-dependent and both camps
-quote it selectively.
+**Bucket 1 — about 70%. For my children.**
+Index funds and good companies. I will never sell a call on this. Not once. Its job
+is to catch the big moves.
 
-**The bull case:** Callan's 18-year study found the BXM buy-write index returned
-11.77% vs 11.67% for the S&P — at roughly **two-thirds the volatility**.
+**Bucket 2 — about 30%. For income.**
+This is where options run. On positions I am completely fine losing.
 
-**The bear case:** Over the last ten years BXM delivered only about **one-third**
-of the S&P's return. And in *every* year the S&P gained 6% or more, you'd have
-been better off simply owning the index.
-
-**On collars** (buying a put to protect, funded by selling a call): AQR found OTM
-puts are consistently more expensive than the OTM calls you'd sell against them,
-so a collar should be *expected* to hurt risk-adjusted performance. The CBOE
-95-110 collar index returned ~5.2% annualised vs 7.3% unhedged over 28.5 years.
-
-> **Covered calls are a volatility-harvesting trade.** They win in flat and
-> falling markets, lose in strong ones. India over the next 15 years is more
-> likely to look like a strong market than a flat one.
+That separation *is* the risk management. Everything else is detail.
 
 ---
 
-## Part 4 — The arithmetic that shapes everything
+## Part 4 — The number that changed everything
 
-Before writing a line of code, I did the one calculation that determines whether
-any premium-selling system can work.
+Now I could ask the real question. Can I sell options systematically and make money?
 
-**Setup:** an iron condor 50 points wide, collecting 15.
-- Max profit = 15
-- Max loss = 35
+Before writing any code, I did one piece of school arithmetic. It reshaped
+everything.
 
-If I exit at 40% of max profit, I bank 6 per win. For break-even:
+Take an iron condor. Don't worry about the name — it just means you sell options on
+both sides, above and below the price, and you buy cheaper options further out to
+protect yourself.
 
-```
-6 × W = 35 × (1 − W)   →   W = 85%
-```
+Say the structure is 50 points wide and you collect 15.
 
-**Eighty-five percent wins just to break even.** Before costs.
+- If everything goes well, you make 15.
+- If it goes badly, you lose 35.
 
-Now change the stop. Cap the loss at 1× the credit received:
+Now, most people book profit at 40%. So on a good trade you take home 6.
 
-```
-required win rate ≈ 71%
-```
-
-Move the profit target from 40% to 50% as well:
+**How often do you need to be right just to break even?**
 
 ```
-required win rate ≈ 67%
+6 × (win rate) = 35 × (loss rate)
 ```
 
-### The lesson that shaped the whole build
+Answer: **85%**.
 
-> **The stop — not the entry — sets your required accuracy.**
->
-> "Small profit, small loss" only works if the losses are genuinely small. In a
-> credit spread they aren't, unless you force them to be.
+Eighty-five percent. Just to be flat. Before brokerage. Before taxes.
 
-This is why I stopped wanting to trade and started wanting to *build*. I didn't
-know my own numbers. Without them, any entry rule is decoration.
+I sat with that for a while.
+
+Then I changed one thing. Instead of letting the loss run to 35, cut it at 15 — the
+same amount I collected.
+
+**Now I need 71%.**
+
+Change the profit booking from 40% to 50% as well:
+
+**67%.**
+
+### Read this twice
+
+> **Your stop loss decides how accurate you need to be. Not your entry.**
+
+Everybody spends their life on entry. Which indicator. Which candle. Which level.
+
+The exit rule was quietly deciding whether the whole thing could ever work.
+
+And I had never calculated this for any strategy I had ever traded. Not once.
 
 ---
 
-## Part 5 — Decision: build first, trade later
+## Part 5 — So I decided: no trading until I build
 
-The commitment:
+This is the decision I actually want you to take from this document.
 
-- Build the full system before placing a single trade
-- Every threshold from **data**, not from opinion
-- मेरा मन कर रहा है → not a valid input
+I told myself: **I will not place a single trade until the system is built and
+tested.**
 
-Hence the name.
+Every number must come from data. Not from a video. Not from a friend. And
+definitely not from *मेरा मन कर रहा है*.
 
-> **Pramana (प्रमाण)** — in Indian epistemology, *a valid means of knowledge*.
-> Evidence that justifies a belief. The system exists so decisions rest on
-> pramana rather than on how I feel at 2pm.
+I named it **Pramana** — प्रमाण.
 
-Four "businesses" already existed in my setup (Nifty, Bank Nifty, stocks,
-directional). This was Business #3, built clean in its own folder — `~/pramana/` —
-deliberately separate from the older codebase, which had accumulated files I no
-longer used.
+In our own philosophy, pramana means *valid knowledge*. Proof. The thing that makes
+a belief trustworthy instead of just a feeling.
 
-**Discipline that came with it:** a `MANIFEST.md` where every file in `src/` and
-`scripts/` gets one line explaining why it exists. No line = deletable. Plus a
-`scratch/` directory that can be wiped without a second thought.
+That is exactly what I was missing all those years at 11:30 at night.
 
 ---
 
-## Part 6 — The data
+## Part 6 — Where the data comes from (this part is free)
 
-### Where it comes from
+People assume you need expensive data. You don't.
 
-Historical option chains do **not** come from a broker API. Kite gives candles for
-instruments that currently exist; option contracts from 2021 are long expired and
-delisted.
+NSE publishes a file every single day called the **bhavcopy**. Every option, every
+strike, every expiry, price, volume, open interest. Free. Public. No login.
 
-The source is **NSE's daily F&O bhavcopy** — a free public archive, no
-authentication.
+I downloaded five years of it. April 2021 to March 2026. About 1,233 trading days.
 
-**Window chosen: 1 April 2021 → 31 March 2026** (FY22–FY26).
+Why only five years? Because before that, the rules were different. Stock options
+used to be cash-settled. Now they are physically settled — you actually deliver
+shares. Mixing old rules with new rules would give me a beautiful backtest of a
+market that no longer exists.
 
-Not longer, deliberately. Stock options in India were cash-settled until physical
-settlement was phased in during 2018-19 — expiry behaviour changed completely.
-SEBI's late-2024 F&O measures changed costs again. A backtest stretching to 2014
-would mix regimes that don't belong together, and the old data would flatter me.
+**Small thing, big lesson:** older data is not always better data.
 
-### Challenge #1 — two file formats
+---
 
-NSE changed the bhavcopy format mid-2024.
+## Part 7 — My first trap (and it's a good one)
 
-| | Legacy (pre 2024-07) | UDiFF (post) |
+I opened the file and found something strange.
+
+Every option has two prices — `close` and `settle`. I assumed they were the same
+thing.
+
+Look at this real row:
+
+```
+AARTIIND  880 CE     close 285.50     settle 451.45     contracts traded: 0
+```
+
+Same option. Same day. Two prices. 58% apart.
+
+Why? **Because nobody traded it that day.** So `close` is an old stale price from
+some previous day, and `settle` is NSE's calculated theoretical value.
+
+Neither one is a price you could have got.
+
+If I had used those prices, my backtest would have shown beautiful profits on trades
+that were never possible in real life.
+
+**So I made a rule:** if nobody traded that option that day, throw the row away.
+
+> If nobody traded it, I couldn't have traded it either.
+
+Fewer rows. But every remaining row is real.
+
+---
+
+## Part 8 — Choosing which stocks to trade (I got this wrong many times)
+
+There are around 200 stocks with options. I wanted 25.
+
+### Mistake 1: I measured volume in the wrong place
+
+My first idea: pick the stocks with the highest option volume. Obvious, right?
+
+Wrong.
+
+**At-the-money options are liquid in almost every stock.** But I don't sell
+at-the-money. I sell 5-8% away from the price.
+
+And out there? Many stocks are dead. Wide spreads. No buyers.
+
+So I had to measure liquidity **at the strikes I would actually use** — not where
+the crowd is.
+
+### Mistake 2: I used five-year averages
+
+Look at what happened to these stocks:
+
+| Stock | Volume in FY22 | Volume in FY26 |
 |---|---|---|
-| Symbol column | `SYMBOL` | `TckrSymb` |
-| Instrument tag | `OPTSTK` / `FUTSTK` | `STO` / `STF` |
-| Turnover | `VAL_INLAKH` (lakhs) | `TtlTrfVal` (rupees) |
-| Underlying price | **absent** | `UndrlygPric` |
-| Lot size | **absent** | `NewBrdLotQty` |
+| DIXON | ₹35 crore/day | ₹1,070 crore/day |
+| MCX | ₹24 crore | ₹994 crore |
+| HAL | ₹23 crore | ₹831 crore |
+| BEL | ₹66 crore | ₹780 crore |
 
-Both had to be normalised to one schema. Turnover units differ by 10⁵ — easy to
-get silently wrong.
+Thirty times bigger. Not 30% — **30 times**.
 
-**Result:** 1,233 trading days, zero errors, 1.1 GB raw, 629 MB parquet.
+Taking a five-year average means averaging a market that is dead with a market that
+is alive. Meaningless.
 
-### Challenge #2 — settle price is not a real price
+**Fix:** rank on the most recent year only. I'm going to trade tomorrow, not in 2021.
 
-Every row has both `close` and `settle`. For an option that **didn't trade**,
-`close` is a stale carry-forward and `settle` is NSE's theoretical mark.
+### Mistake 3: I threw away good stocks
 
-Real example from the data:
+I made a rule: the stock must have data for at least 80% of the five years.
 
-```
-2021-04-05  AARTIIND 880 CE   close 285.50   settle 451.45   contracts 0
-```
+This correctly removed HDFC — which merged into HDFC Bank in 2023. Good. That
+actually proved my data was reading correctly.
 
-Same option, same day, two prices differing by 58%.
+But it also removed BSE, JIOFIN, DIXON, CDSL. These are *very* liquid stocks today.
+They were just added to F&O recently.
 
-**Decision:** drop every zero-volume row for IV computation. If nobody traded it,
-I couldn't have traded it either — its IV is fictional. Fewer data points, all
-real. (Settle is kept separately, but only as a mark-to-market for positions
-already open.)
+My filter could not tell the difference between **"this stock died"** and **"this
+stock was born recently."**
 
----
+**Fix:** must be liquid in the last two years. Not all five.
 
-## Part 7 — Building the universe (this took several attempts)
+### Mistake 4: the Vodafone Idea trap
 
-### Challenge #3 — measuring liquidity in the wrong place
+This one is my favourite.
 
-My first instinct was to rank stocks by option volume. Wrong.
+IDEA showed ₹364 crore of daily option turnover. Huge. And it failed my test every
+single year.
 
-**At-the-money is liquid on almost everything.** The strikes I'd actually sell —
-5–8% out of the money — often aren't. That's exactly where slippage lives.
+I thought my code was broken. It wasn't.
 
-So the ranking metric became **median daily notional turnover at 5–8% OTM
-strikes**, not ATM.
+**Vodafone Idea trades around ₹8. Strikes are 50 paise apart.**
 
-A synthetic test proved the point: a stock that trades heavily at ATM but not at
-5–8% OTM is correctly rejected, despite looking excellent on a naive screen.
+So when I say "sell 5-8% away from the price," that entire zone is about 40 paise
+wide. Often *no strike exists there at all.*
 
-### Challenge #4 — liquidity moved 30× in five years
+> A stock can have enormous volume and still be completely untradeable for your
+> particular strategy.
 
-Ranking on a five-year median seemed obvious. The per-year table killed that idea:
-
-| Stock | FY22 | FY26 |
-|---|---|---|
-| DIXON | ₹35 cr/day | ₹1,070 cr/day |
-| MCX | ₹24 cr | ₹994 cr |
-| HAL | ₹23 cr | ₹831 cr |
-| BEL | ₹66 cr | ₹780 cr |
-| TRENT | ₹13 cr | ₹603 cr |
-
-These aren't drifts. Averaging a 2021 market that no longer exists with the 2026
-market I'll actually trade is meaningless.
-
-**Fix:** rank on the most recent financial year.
-
-### Challenge #5 — dead tickers vs newborn ones
-
-A coverage filter (must be present 80% of days) correctly excluded HDFC — which
-merged into HDFCBANK in July 2023. Seeing that corporate event appear
-*unprompted* in the data was the first real confirmation the parsing was sound.
-
-But the same filter also excluded BSE, JIOFIN, DIXON, CDSL — names that are
-*extremely* liquid now, just recently listed in F&O. The filter couldn't tell
-"died" from "was born late."
-
-**Fix:** require qualification in the trailing 2 financial years, not all 5.
-
-### Challenge #6 — the IDEA trap
-
-Vodafone Idea showed ₹364 cr/day of turnover and failed every year.
-
-Why: it trades near ₹8, with strikes ₹0.50 apart. The 5–8% OTM band spans about
-40 paise — often **zero strikes land in it**.
-
-> **Percentage-based strike selection breaks down on low-priced stocks,
-> regardless of how much money flows through them.**
-
-**Fix:** a minimum price filter (₹150).
-
-### Also noticed, then also observed in the data
-
-ZOMATO at 0.07 coverage and ETERNAL at 0.19 are the same company before and after
-its 2025 rename. TATAMOTORS at 0.91 with TMPV at 0.09 is the demerger. All
-visible in the raw liquidity table without being told.
-
-### The final 25
-
-Ranked on FY26 OTM liquidity, requiring two qualifying years, above ₹150:
-
-```
-RELIANCE  MARUTI  DIXON  INFY  MCX  SBIN  TCS  HAL  HDFCBANK  BEL
-BAJFINANCE  TRENT  M&M  BHARTIARTL  TATASTEEL  ICICIBANK  AXISBANK
-INDIGO  HEROMOTOCO  BAJAJ-AUTO  ADANIENT  VEDL  KOTAKBANK  LT  HINDALCO
-```
-
-Every filter is in a config file. Every rejected name is printed with the reason
-it was rejected — so the universe can be *audited*, not trusted.
+Volume is not liquidity. Where the volume sits matters more than how much there is.
 
 ---
 
-## Part 8 — Implied volatility, and why the obvious approach is wrong
+## Part 9 — Measuring fear correctly
 
-### Deriving spot
+To sell options you need to know one thing: **is fear high right now, or low?**
 
-Pre-2024 files have no underlying price. Futures do exist, so:
+That is what IV — implied volatility — means. It is simply the market's guess about
+how much a stock will move. High IV means fat premiums. Low IV means thin ones.
 
-```
-S = F × e^(−r·T)
-```
+And here is why we sell when it's high: **on average, the market is more scared than
+it needs to be.** That gap is the whole business. But it only opens up when fear is
+already elevated. Selling in a quiet market means you take the same risk for peanuts.
 
-**Decision that mattered:** use this for **all five years**, not just the years
-missing the column.
+### But the obvious way to measure it is wrong
 
-Why: IV rank looks back 12 months. If the method changed in July 2024, then for
-~12 months either side the system would be comparing IVs computed two different
-ways — a fake signal exactly where it's most dangerous.
+Here is the trap. As expiry gets closer, IV goes **up automatically**. Not because
+anything scary happened. Just because of how the maths works.
 
-**Validation:** median gap vs NSE's own published underlying price: **−0.04%**,
-range −0.16% to +0.04%. The assumption held.
+So if I measured IV the simple way, my "fear meter" would go up and down with the
+calendar, not with actual fear.
 
-**Free bonus:** the future already embeds expected dividends, so a discounted
-future is a *dividend-adjusted* spot. Cleaner than raw cash price.
+I would be entering trades because it was the 20th of the month, while believing I
+was reading the market.
 
-### Solver quality
+**Fix:** always measure IV at a fixed distance — exactly 30 days out — no matter
+where we are in the expiry cycle. Now the number only moves when real fear moves.
 
-Newton's method, then bisection for stragglers. First version accepted
-convergence in *price* terms — max error 0.57 vol points. Too loose: where vega
-is small, a tiny price error implies a large vol error.
+### And then a second trap
 
-**Fix:** acceptance test in **vol** terms (scaled by vega).
+I use something called **IV Rank**. It compares today's fear to the last one year.
+0 means calmest all year, 100 means most fearful.
 
-```
-solve rate 99.09%   max error 1e-5 vol points
-```
+Then I looked at Adani Enterprises:
 
-Result on real data: **2.3 million IV points, 96% solved.**
-
-### Challenge #7 — the sawtooth
-
-The obvious "IV of the stock today" is near-month ATM IV. It's wrong.
-
-**As expiry approaches, ATM IV rises mechanically** — from time, not fear. The
-resulting series has a sawtooth that tracks the *calendar*, and IV rank would
-fire on the position in the expiry cycle rather than on real volatility.
-
-**Fix:** interpolate to a constant 30-day maturity, in **total variance**
-(σ² × t, the additive quantity), between the two expiries straddling 30 days.
-
-Hand-verified: expiries at 20 DTE @ 30% and 51 DTE @ 20% → iv30 = 0.25016. ✓
-
-**A bug this caught:** when only one expiry was available, my code rescaled its
-variance to 30 days — turning a genuine 30% IV into 24%. A silent vol signal
-manufactured from nothing. Fixed to use that expiry's IV directly.
-
-### Challenge #8 — IV rank is broken by single spikes
-
-Sanity table of 30-day ATM IV by stock:
-
-| Stock | Median IV | Days with rank ≥50 |
-|---|---|---|
-| ADANIENT | 39.9% | **6.3%** |
-| DIXON | 37.9% | 24.3% |
-| HDFCBANK | 19.1% | 20.5% |
-
-The levels are right (banks low, Adani/Dixon high). But look at ADANIENT's last
-column.
-
-**Cause:** IV rank = (today − min) / (max − min). Adani hit **231% IV** during
-Hindenburg. That single spike sets `max` for a full year, crushing every
-subsequent day toward zero. The signal is dead for that name.
-
-**Fix:** gate on **IV percentile** (what fraction of the past year was lower) —
-immune to spikes. Keep IV rank as a display metric only.
-
----
-
-## Part 9 — Corporate actions: three attempts to get one thing right
-
-This was the longest detour of the day, and worth documenting honestly as a
-lesson in *how not to* diagnose a problem.
-
-### The symptom
-
-RELIANCE showed a minimum IV of **3.4%**. Impossible — its true floor is ~12-14%.
-
-The bad days clustered 11–19 July 2023. That's the **Jio Financial demerger**,
-ex-date 20 July.
-
-### Why it happened
-
-The July future expired on the 27th — *after* the ex-date. So from the moment it
-became the near month, it was already pricing the post-demerger stock (~₹2,545)
-while option strikes still referenced the cash price (~₹2,800).
-
-Derived spot inherits the future's view → moneyness off by ~9% → the ATM band
-selects the wrong strikes → garbage IV.
-
-### Attempt 1 — trigger on price gaps (>15%)
-
-Found 8 real splits. Also produced **8 false positives**, including
-**2024-06-04 — election results day** — flagged on ADANIENT, BEL and HAL
-simultaneously.
-
-> It was proposing to delete the single most informative high-volatility day in
-> five years, from three stocks at once.
-
-### Attempt 2 — add breadth + strike-grid checks
-
-Two discriminators:
-1. A corporate action hits **one** stock; a market event hits many the same day
-2. After a split the **entire strike grid is reissued** — KOTAK's ₹2000 strike
-   becomes ₹400, so before/after strike sets share almost nothing
-
-Result: clean separation.
-
-```
-confirmed splits   : strike overlap 0.000
-rejected as market : strike overlap 0.42 – 1.00
-```
-
-Election day sat at 0.90 overlap → auto-rejected. Hindenburg preserved.
-
-**But RELIANCE still wasn't caught** — its demerger moved the price only ~9%,
-under the 15% trigger.
-
-### Attempt 3 — invert the design
-
-The realisation: **the strike grid was a far better signal than the price.** So
-why was price the trigger at all?
-
-Scanning grid overlap on *every* symbol-day:
-
-```
-contract adjustments : 0.000 – 0.275   (29 events)
----- empty gap ----
-normal sessions      : 0.340 – 1.000   (30,471 sessions)
-```
-
-The threshold picks itself.
-
-**And it found 25 events the price trigger never could:**
-- VEDL **nine times** — NSE adjusts F&O contracts for any dividend above 2% of
-  market price. Vedanta pays enormous special dividends. Price barely moves;
-  whole grid reissued.
-- TATASTEEL 4×, TCS buyback, HEROMOTOCO, BHARTIARTL's 2021 rights issue
-
-One more subtlety: for the demerger, the **futures gap was 1.00** — no gap at
-all. So the adjustment ratio had to come from **strike medians**, not the futures
-price. Reliance: 2800 → 2550 = ratio 0.91.
-
-### The lesson I'd tell anyone
-
-> **I spent 40 minutes iterating a detector when corporate actions are published
-> facts I could have simply looked up.**
->
-> The detector existed because I didn't want to leave the data I already had, not
-> because inference was the right method. When you're stuck: fetch the ground
-> truth instead of inferring it.
-
-Final: 27 events, 224 excluded days (0.7% of all symbol-days).
-
----
-
-## Part 10 — The bug that would have destroyed everything silently
-
-First backtest run:
-
-```
-FY22   21 trades   win 0.0%
-FY23   34 trades   win 0.0%
-FY24   28 trades   win 0.0%
-FY25   61 trades   win 31.1%
-FY26   63 trades   win 63.5%
-```
-
-**Zero percent wins for three years, then 63%.** No strategy does that.
-
-**Cause:** `lot_size` only exists in files from mid-2024. Before that it's `NaN`,
-and my fallback quietly used **1**. So every pre-2024 trade was sized at *one
-share* instead of a full lot. Gross P&L divided by ~500, fees unchanged → every
-old trade a small guaranteed loss.
-
-### The fix — reconstruct from arithmetic already in the data
-
-Futures turnover = contracts × lot × price, therefore:
-
-```
-lot_size = turnover / (contracts × close)
-```
-
-Two refinements were needed:
-1. The quotient carries ~0.25% noise (turnover reflects the *average* traded
-   price; I divide by the close). Pooling estimates across a lot-size *regime*
-   fixes it.
-2. Snap to a multiple of 25 when within 1.5% — NSE lot sizes almost always are.
-   ADANIENT's 309 (from a corporate-action adjustment) correctly falls through.
-
-**Validation:** against published values in the overlap period, and against a
-live Kite screen —
-
-| Stock | Reconstructed change | Confirmed by |
-|---|---|---|
-| KOTAKBANK | 400 → 2000, Jan 2026 | 1:5 split (Kite) |
-| MCX | 125 → 625, Jan 2026 | 1:5 split (Kite) |
-| RELIANCE | 250 → 500, Nov 2024 | 1:1 bonus |
-| TATASTEEL | 425 → 4250, Aug 2022 | 1:10 split |
-
-### The lesson
-
-> **The dangerous bugs don't crash. They produce plausible-looking numbers.**
->
-> A 0% win rate was obvious. A 15% error would have passed unnoticed and I'd have
-> traded on it. Every default value is a silent assumption — make it fail loudly
-> instead.
-
-Also worth noting: I initially concluded from bad lot data that KOTAKBANK was
-"too chunky to trade" at ₹42 lakh notional. A Kite screenshot showed the real
-figure was ₹7.9 lakh — the stock had *split*, and I was multiplying a pre-split
-price by a post-split lot. **Live data corrected the analysis.**
-
----
-
-## Part 11 — The backtest
-
-### Specification
-
-| Parameter | Value |
+| Stock | Days when IV Rank was above 50 |
 |---|---|
-| Structure | Iron condor, both sides, **always defined risk** |
-| Short strikes | 0.15 delta |
-| Long wings | ~0.05 delta |
-| Entry | First session at 35–45 DTE into monthly expiry |
-| Gate | IV percentile ≥ 50 |
-| Target | 50% of credit |
-| Stop | 100% of credit |
-| Time exit | 21 DTE |
+| ADANIENT | **6.3%** |
+| DIXON | 24.3% |
+| HDFCBANK | 20.5% |
 
-**Why delta, not fixed percentage:** at 18% vol the 0.15-delta call sits ~8% OTM;
-at 30% vol it's ~14% OTM. A fixed band would sell TCS far too close and VEDL far
-too wide. Delta adapts to each stock's regime automatically.
+Six percent? For a volatile stock like Adani?
 
-### What could not be tested
+Here's why. During the Hindenburg crash, Adani's IV touched **231%**. Insane
+number.
 
-I wanted to *leg in* — bull put spread near support, add the bear call at
-resistance. **That can't be backtested.** The result depends on judgement calls
-that don't exist in the data. So v1 tests the mechanical version, which gives a
-baseline that legging can later be measured *against*.
+IV Rank works like this: *where is today, between the lowest and highest of the
+year?*
 
-### Result (after the lot fix)
+That one crazy day became "the highest." So for the next full year, **every normal
+day looked calm by comparison.** The measurement was dead for that stock. And the
+summary table looked perfectly healthy — nothing shouted at me.
 
-```
-trades              207
-win rate            60.9%
-total net           Rs −154,783
-payoff ratio        0.47
-break-even winrate  67.8%   (actual 60.9%)
-```
-
-**It loses.** And the reason is visible in the payoff ratio: target at 50% of
-credit and stop at 100% forces wins to be half a credit and losses a full credit.
-That structure *demands* ~68% accuracy. It's the arithmetic from Part 4, showing
-up exactly as predicted.
+**Fix:** use **IV Percentile** instead — simply *what percentage of days in the last
+year were calmer than today?* One crazy day cannot break it.
 
 ---
 
-## Part 12 — The finding: the stop was the problem
+## Part 10 — The mistake I want to confess
 
-Rather than tune one parameter at a time, I swept the whole grid — and added the
-counterfactual that actually mattered.
+This one is embarrassing, and it is the most useful part of this document.
 
-**Question:** for every trade that hit its stop, what would it have made if held?
+I found that Reliance showed a minimum IV of 3.4%. Impossible. Reliance is never
+that quiet.
 
-```
-STOP COUNTERFACTUAL — 63 trades breached −1× credit
-  realising the stop:      Rs −532,981
-  holding to target/time:  Rs −375,457
-  recovered after breach:  69.8%
-```
+I looked at the dates: 11 to 19 July 2023.
 
-**Nearly 70% of stopped trades recovered.**
+That is the **Jio Financial demerger**.
 
-### Why this makes sense
+When a company splits, or gives a bonus, or demerges, NSE **changes all the option
+contracts**. Strike prices get adjusted. And in my data, everything around those
+days becomes garbage.
 
-On a **defined-risk** position, the long wing already caps the loss. A stop
-doesn't reduce risk — it converts a temporary drawdown into a realised loss.
+So I decided to write code that automatically finds these events.
 
-That's different from naked selling, where a stop is the only thing standing
-between you and an unbounded loss. Historically all my own losses came from naked
-positions with no alerts. That experience made a stop feel mandatory. **On a
-hedged position, it isn't.**
+**Attempt 1:** Find days when the price jumped more than 15%.
 
-### The sweep
+It found 8 real splits. It also flagged 4 June 2024 — **election results day** —
+across three different stocks.
 
-| Target | Stop | Win % | Total |
-|---|---|---|---|
-| 35% | none | 80.0% | **+₹36,653** |
-| 65% | none | 71.8% | +₹33,835 |
-| 50% | none | 73.9% | +₹26,320 |
-| 35% | 1.5× | 76.4% | +₹2,270 |
-| 50% | 1.0× | 60.9% | **−₹154,783** |
+My code was about to delete the single most important high-volatility day in five
+years. The exact kind of day I most need to learn from.
 
-Removing the stop moved −₹154,783 → +₹36,653.
+**Attempt 2:** I added smarter checks. Better. But it *still* missed Reliance,
+because the demerger only moved the price 9% — under my 15% threshold.
 
----
+**Attempt 3:** I finally realised something. When a stock splits, NSE **reissues
+every strike price**. Kotak's ₹2000 strike becomes ₹400. The old strikes simply
+vanish.
 
-## Part 13 — But is it real? (the part most people skip)
+So instead of watching the price, watch the **strike list**. If yesterday's strikes
+and today's strikes have nothing in common, something happened.
 
-+₹36,653 over 205 trades = ₹179 per trade. Time to test whether that's an edge or
-noise.
+This worked instantly and perfectly. It even caught 25 events the price method could
+*never* find — like Vedanta, nine separate times, because NSE also adjusts contracts
+when a company pays a very large dividend. The price barely moves. The strikes all
+change.
 
-### Bootstrap on synthetic data first
+### Now the confession
 
-Before trusting the test, I checked it against known distributions:
+**I spent forty minutes writing three versions of this detector.**
 
-| True edge | Sample of 205 gave | 95% CI |
-|---|---|---|
-| ₹0 | −₹138 | [−729, +468] |
-| ₹179 | −₹390 | [−1050, +283] |
-| ₹1,500 | +₹743 | [+58, +1460] |
+Corporate actions are **published information**. NSE announces them. They are on the
+internet. I could have simply looked them up in two minutes.
 
-**Look at the last row.** Even with a *genuine* ₹1,500 edge, a 205-trade sample
-barely clears zero.
+Why didn't I? Because I was comfortable inside my own data and I didn't want to
+leave it. I kept trying to be clever instead of just checking.
 
-> **This backtest can only detect large edges.** Distinguishing ₹179 from zero
-> would need roughly **6,000 trades**. I have 205 — and 25 stocks trading monthly
-> for five years is the ceiling. That's a structural limit of the design, not a
-> coding flaw.
+> When you find yourself trying the fifth version of something — stop.
+> Go and find the real answer instead of trying to guess it.
 
-### The real result
-
-| IV gate | Slippage | Trades | Per trade | 95% CI |
-|---|---|---|---|---|
-| 50 | 0.5% | 206 | ₹731 | [−231, +1575] |
-| 50 | 2.0% | 205 | ₹251 | [−735, +1149] |
-| 50 | 3.5% | 205 | −₹89 | [−1138, +851] |
-| 70 | 0.5% | 128 | ₹1,062 | [−200, +2094] |
-| 70 | 2.0% | 127 | ₹666 | [−666, +1802] |
-| 70 | 3.5% | 127 | ₹496 | [−855, +1665] |
-| 80 | 2.0% | 89 | ₹648 | [−1123, +2101] |
-
-**Zero of twelve configurations had a confidence interval clearing zero.**
-
-I also reported this deliberately: evaluating 12 combinations and picking the best
-is itself a bias — the maximum of 12 noisy estimates is inflated even when no edge
-exists.
-
-### Three patterns that are structurally coherent
-
-**1. Slippage is decisive and monotonic.** ₹731 → ₹571 → ₹251 → −₹89 as slippage
-goes 0.5% → 3.5%. Break-even sits near **3%**.
-
-**2. The IV gate does real work.** Tightening 50 → 70 lifts per-trade from ₹251
-to ₹666. More importantly, gates 70 and 80 stay *positive even at 3.5% slippage*
-where gate 50 goes negative. Robust to pessimistic assumptions rather than
-needing optimistic ones.
-
-**3. FY24 lost ₹60,790** against +₹112,000 across the other four years. That's
-the strong trending rally of Apr 2023 – Mar 2024. Iron condors get run over by
-sustained directional moves — the textbook failure mode, appearing exactly where
-theory predicts.
-
-And the temptation was obvious: *add a trend filter to fix FY24*. That would be
-fitting to a single year. **I didn't.**
+I do this in life too. Maybe you do as well.
 
 ---
 
-## Part 14 — Where the answer actually lives
+## Part 11 — The bug that nearly fooled me completely
 
-The backtest reached its limit. It cannot resolve a ₹500–1,000 per-trade edge
-with 127 trades, and further parameter tuning would only overfit.
+I ran the backtest. Here are the results, year by year:
 
-The binding unknown is **slippage** — and it is *unanswerable from historical
-bhavcopy, because settlement files contain no bid-ask.*
-
-Every fill in the backtest assumed the midpoint on four legs. In reality:
-- Short strikes showed ~5-6% bid-ask spreads
-- **The far-OTM wings showed ~13%**
-
-The legs you buy for protection are where most of your execution cost lives.
-
-### Paper trading vs live micro-trial
-
-I chose a **live 1-lot trial** over paper trading. Virtual fills don't reflect
-order-book queue priority — the exact thing being measured.
-
-**Config under test:**
-
-| Parameter | Value |
+| Year | Win rate |
 |---|---|
-| Size | 1 lot, max 2 concurrent |
-| Entry | IV percentile ≥ 70, 0.15 delta shorts, defined wings |
-| Target | 35% of credit |
-| Stop | **None** (wings cap risk) |
-| Exit | Hard at 21 DTE |
+| FY22 | **0.0%** |
+| FY23 | **0.0%** |
+| FY24 | **0.0%** |
+| FY25 | 31.1% |
+| FY26 | 63.5% |
 
-**The cost of this measurement:** ~₹40,000–60,000 maximum loss if both positions
-go fully against me. That's a research expense, not an income attempt.
+Zero percent. Three years in a row. Then suddenly 63%.
 
-**What the trial measures:** *not* whether the strategy works. Two months is
-4–8 trades — pure noise on P&L. It measures **slippage per leg as a fraction of
-mid**. That single number decides everything.
+No strategy on earth behaves like that.
 
-Which is why the journal tool logs **bid and ask at order time** as mandatory
-fields. Without the mid there's no benchmark and the trial produces nothing.
+### What had happened
 
----
+The bhavcopy only started publishing **lot size** from mid-2024. Before that, the
+column is empty.
 
-## Part 15 — What I'd want a friend to take from this
+My code, when it found nothing, quietly used **1**.
 
-**1. Check whether you need the complex thing.**
-₹1cr → ₹5cr in 15 years needs 11.3% CAGR. An index fund does that. I nearly built
-a machine to reach a target a boring one already reaches.
+So every trade before 2024 was calculated as if I had bought **one share** instead
+of one lot of 500 shares.
 
-**2. Separate incompatible goals into separate money.**
-Generational holding and premium income fight each other. Two buckets, never
-touching.
+Profits divided by 500. Brokerage unchanged. Every old trade became a guaranteed
+small loss.
 
-**3. Do the break-even arithmetic before anything else.**
-A 40% target with a full-width loss needs 85% wins. Knowing that reshapes the
-entire design before you write code.
+### Why this is the scariest part
 
-**4. The stop sets your required accuracy — not the entry.**
+**The bug did not crash. It gave me a normal-looking table.**
 
-**5. On defined-risk positions, a stop may be actively harmful.**
-70% of my stopped trades recovered. The wing is the risk control.
+I caught it only because 0% is obviously impossible.
 
-**6. The dangerous bugs produce plausible numbers.**
-A silent default of `lot_size = 1` looked like three bad years, not a bug. Make
-defaults fail loudly.
+If the error had been 15% instead of 100%, I would never have noticed. I would have
+traded real money on a broken number.
 
-**7. Test your test.**
-Running the bootstrap on synthetic data with a *known* edge revealed that my
-sample size couldn't detect anything under ~₹1,000/trade. That reframed what the
-whole project could ever prove.
+> The dangerous mistakes don't announce themselves. They look reasonable.
+>
+> Every "default value" in your system is a silent assumption. Make it shout at
+> you instead of whispering.
 
-**8. Fetch ground truth instead of inferring it.**
-I burned 40 minutes building a corporate-action detector for facts that are
-published.
-
-**9. Know what your data physically cannot contain.**
-No bid-ask in bhavcopy → slippage is unknowable historically → only live fills
-answer it.
-
-**10. A null result is a real result.**
-"No measurable edge, and it's decided by execution cost" is far more useful than
-a backtest that flatters itself. I now know exactly what to measure next.
+I fixed it using simple maths that was already in the data — turnover divided by
+(contracts × price) gives you the lot size. Then I checked it against my Zerodha
+screen. It matched.
 
 ---
 
-## Appendix — Build sequence
+## Part 12 — The system gave its answer
+
+Everything fixed. Everything tested. I ran it properly.
+
+**Result: it loses money.**
 
 ```
-1.  download_bhavcopy.py    NSE archive → parquet (both formats)
-2.  rank_universe.py        liquidity at 5-8% OTM, not ATM
-3.  stability_by_year.py    per-FY (liquidity moved 30×)
-4.  build_universe.py       the 25 names
-5.  compute_iv.py           2.3M IV points, 96% solved
-6.  build_iv30.py           constant-30d IV + rank/percentile
-7.  detect_corp_actions.py  strike-grid reissue detector
-8.  build_lot_sizes.py      reconstructed from turnover
-9.  build_chains.py         per-symbol chains
-10. backtest.py             iron condor engine
-11. sweep.py                exit grid + stop counterfactual
-12. analyse.py              bootstrap CI, slippage, IV gate
-13. journal.py              live trial logger
+207 trades
+Win rate: 60.9%
+Needed to break even: 67.8%
+Net: −₹1,54,783
 ```
 
-**Stack:** Python, pandas, numpy, scipy, pyarrow on an Azure Ubuntu VM.
-**Data:** free, public, no broker API required for history.
-**Time:** one day.
+I was winning 6 out of 10 trades and still losing money.
+
+Exactly what Part 4 predicted. My wins were small and my losses were big, so 61%
+was simply not enough.
+
+The arithmetic warned me before I wrote a single line of code. Now the data was
+saying the same thing in a louder voice.
 
 ---
 
-*The system's job was never to make me money. It was to tell me the truth about
-whether an idea works. It did — and the truth was "not measurably, and here is
-the one number that would settle it."*
+## Part 13 — And then the system taught me something
+
+Instead of changing settings one by one, I asked one clean question:
+
+> **Every trade where I hit my stop loss — what would have happened if I had just
+> held on?**
+
+The answer:
+
+```
+Trades that hit the stop:              63
+How many recovered afterwards:      69.8%
+```
+
+**Seven out of ten stopped trades would have been fine.**
+
+I removed the stop loss completely and reran everything:
+
+```
+With stop loss:      −₹1,54,783
+Without stop loss:      +₹36,653
+```
+
+### Why this happens (and why it is not reckless)
+
+I need to be careful here, because "remove your stop loss" is terrible advice in
+most situations. Please read this part properly.
+
+In this structure I am **already protected**. I buy a further option that caps my
+maximum loss. Whatever happens overnight — war, budget, anything — my loss cannot
+exceed a known number.
+
+When protection is already built in, a stop loss doesn't reduce risk. It just turns
+a temporary loss into a permanent one.
+
+My instinct said the opposite. Because every serious loss in my trading life came
+from **naked** positions with no protection. In that world, a stop is the only thing
+standing between you and disaster.
+
+I had carried a correct lesson from one situation into a situation where it was
+wrong.
+
+> This is the whole value of testing. It told me my instinct was backwards.
+> No YouTube video was ever going to do that for me.
+
+---
+
+## Part 14 — But I did not celebrate
+
++₹36,653 over 205 trades. About **₹179 per trade**.
+
+Before believing that number, I did something I now think everybody should do.
+
+**I tested my test.**
+
+I made fake data where I already knew the answer, and checked whether my analysis
+could find it.
+
+| Real edge I put in | What my test reported |
+|---|---|
+| ₹0 | −₹138 |
+| ₹179 | −₹390 |
+| ₹1,500 | +₹743 |
+
+Look at the last row carefully.
+
+Even when I *deliberately put in* a strong edge of ₹1,500 per trade, my test —
+with 205 trades — could barely see it.
+
+**Which means my test simply cannot tell the difference between ₹179 and zero.**
+
+To prove something that small I would need around **6,000 trades**. I have 205. And
+25 stocks trading once a month for five years is the maximum this approach can ever
+give.
+
+That is not a bug in my code. That is a hard limit of what I can ever know from
+history.
+
+### The honest result
+
+I tested 12 different settings. **Not one of them could be proven to make money.**
+
+```
+0 out of 12 settings showed a result I can trust.
+```
+
+---
+
+## Part 15 — But three things were clearly true
+
+The system couldn't prove profit. But it showed me three things that make complete
+sense:
+
+**1. Everything depends on execution cost.**
+
+| Cost per leg | Profit per trade |
+|---|---|
+| 0.5% | ₹731 |
+| 2.0% | ₹251 |
+| 3.5% | −₹89 |
+
+Break-even is around 3%. **The whole business lives or dies on how well you get
+filled.** Not on the strategy.
+
+**2. Being patient works.**
+
+When I only traded when fear was in the top 30% of the year, results improved — and
+stayed positive even assuming bad fills. Fewer trades. Better trades.
+
+**3. FY24 was terrible — and that makes sense.**
+
+FY24 lost ₹60,790 while the other four years together made ₹1,12,000.
+
+FY24 was the big trending rally. This strategy makes money when the market goes
+sideways and gets destroyed when it trends hard.
+
+Now — I could add a rule to avoid trending markets, and my backtest would suddenly
+look beautiful.
+
+**I didn't.** Because I would only be adding that rule *after seeing* FY24. That is
+not learning. That is decorating history so it flatters me.
+
+> If you keep adjusting your rules until the past looks good, you have not built a
+> strategy. You have built a very expensive story.
+
+---
+
+## Part 16 — The one thing my data could never tell me
+
+Here is where it gets interesting.
+
+Everything came down to **slippage** — the gap between the price you see and the
+price you actually get.
+
+And bhavcopy **cannot** tell me this. It has no bid-ask. It only records what
+happened, not what was on the screen.
+
+My backtest assumed I always got the perfect middle price on all four legs. Nobody
+gets that.
+
+Real spreads I found:
+- On the options I sell: about 5-6% wide
+- **On the far options I buy for protection: about 13% wide**
+
+The protection is where the money quietly leaks out.
+
+### So I am going live. Small.
+
+Not paper trading. Paper trading gives you imaginary fills — and imaginary fills are
+exactly the thing I need to measure.
+
+**1 lot. Maximum 2 positions at a time.**
+
+Worst case if everything goes wrong: about ₹40,000 to ₹60,000.
+
+I want to be very clear about what that money is. **It is not an attempt to earn.
+It is the fee for finding out the truth.**
+
+And I am not measuring profit. Two months gives maybe 6 trades — that tells me
+nothing about profit.
+
+I am measuring **one number**: how much I actually lose on each fill.
+
+Under 3% → there is something here.
+Over 3% → there isn't, and I walk away.
+
+Either answer is worth ₹50,000 to me. Because right now I don't know, and not
+knowing is what makes people quit at 11:30 at night.
+
+---
+
+## What I actually want you to take from this
+
+Not my settings. Please don't copy my settings.
+
+**1. Do the small calculation first.**
+₹1 crore to ₹5 crore in fifteen years needs 11.3% a year. Find out what you actually
+need before deciding you need something clever.
+
+**2. Keep your long-term money and your trading money completely separate.**
+Different accounts. They fight each other otherwise.
+
+**3. Calculate your break-even win rate before you trade anything.**
+Take any strategy you're using right now. Work out how often you must be right just
+to be flat. Most people have never done this and are shocked by the answer.
+
+**4. Your exit rule decides your fate, not your entry.**
+We all spend our time on entries. It's the wrong place to spend it.
+
+**5. Be careful about carrying lessons from one situation to another.**
+My stop loss habit was correct for naked positions and wrong for protected ones.
+
+**6. The dangerous mistakes look normal.**
+A missing lot size showed up as three bad years, not an error message.
+
+**7. Test whether your test can even work.**
+I found out mine could never detect a small edge. That changed what I could
+honestly claim.
+
+**8. When you're stuck, go find the real answer.**
+Don't build a clever guess. I wasted forty minutes on this.
+
+**9. Know what your data can never tell you.**
+Mine could never tell me about slippage. So I stopped pretending and went to find
+out live.
+
+**10. "No" is a real answer.**
+
+That last one matters most.
+
+My system told me no. And I am genuinely glad — because the other option was to
+find out with ₹10 lakh instead of ₹50,000, three years from now, with much less
+patience left.
+
+---
+
+## Please don't copy this
+
+I am not giving you a strategy. I don't have one to give.
+
+What I want is for you to build your own version of this. Your own questions. Your
+own data. Your own uncomfortable answers.
+
+Because the next time you're down ₹40,000 — and you will be — the only thing that
+will keep you steady is knowing *why* you believed in the first place.
+
+That is the difference between trading and hoping.
+
+You will never get that from a video. Not even this one.
+
+---
+
+### The tools (all free)
+
+Free NSE data · Python · one ordinary computer · one day
+
+Nothing here needed money. It needed the willingness to be told "no."
