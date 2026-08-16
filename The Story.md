@@ -2,7 +2,7 @@
 
 *How I stopped looking for a strategy and started looking for the truth*
 
-**Rahul Chaubey · August 2026**
+**Rahul Chaubey**
 
 ---
 
