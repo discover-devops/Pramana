@@ -30,12 +30,6 @@ What actually transfers is the **process**. Learning to build a system that tell
 
 That's what I'm trying to share here.
 
-**The honest headline, up front:**
-
-> We built the system, tested it properly on five years of NSE data, and found **no statistically significant edge**. The result turned out to be decided almost entirely by execution cost — a number historical data physically cannot contain.
-
-That's not a failure. That's the system working. A backtest that says yes to everything is a backtest that was never asked a hard question.
-
 What I can share is a **thought process** — how to go from a vague idea to a
 system that tells you the truth, including when the truth is disappointing.
 
