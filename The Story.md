@@ -8,9 +8,31 @@
 
 ## Why this document exists
 
-People in my options group keep asking me to teach them a strategy. I don't want to
-do that. A strategy handed to you is a strategy you'll abandon the first time it
-draws down, because you never saw the evidence that made it credible.
+Here's the rewrite, in your voice:
+
+---
+
+## Why this document exists
+
+Everybody wants a strategy.
+
+We all carry the same belief: that somewhere out there is the right strategy, and the day I find it, my problems are solved. So we watch a hundred YouTube videos looking for the magic thing. Especially in option trading. And every few weeks you hear something in a video or a podcast and you think: **yes. This is it. This is the thing I was looking for.**
+
+Then you start implementing it. You take a few losses. And you simply stop.
+
+Why does that happen? Not because the strategy was bad. Sometimes it's a strategy that genuinely works for the person teaching it. It happens because **you never saw the evidence that made it credible.** You inherited someone else's conclusion without their reasoning. So the first time it hurts, you have nothing to hold on to — no reason to believe the drawdown is normal rather than fatal.
+
+That's why I won't teach you a strategy.
+
+What actually transfers is the **process**. Learning to build a system that tells you the truth — including when the truth is disappointing. If you know these things before you place a single real trade, then you've learnt something that survives the drawdown.
+
+That's what I'm trying to share here.
+
+**The honest headline, up front:**
+
+> We built the system, tested it properly on five years of NSE data, and found **no statistically significant edge**. The result turned out to be decided almost entirely by execution cost — a number historical data physically cannot contain.
+
+That's not a failure. That's the system working. A backtest that says yes to everything is a backtest that was never asked a hard question.
 
 What I can share is a **thought process** — how to go from a vague idea to a
 system that tells you the truth, including when the truth is disappointing.
