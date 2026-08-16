@@ -54,9 +54,23 @@ That's it. Put your own numbers in.
 
 ---
 
-### Now let's fix the shop
+Here it is in English.
 
-**Fix 1 — Install a CCTV.** Now you catch the thief early. Instead of ₹35 of goods, he only gets away with ₹15.
+---
+
+## Now let's fix the shop
+
+Only two things are in your hands: **how much you make when it works**, and **how much you lose when it doesn't**. That's all.
+
+---
+
+### Fix 1 — Make the loss smaller
+
+Right now the thief walks out with ₹35 of goods. Full damage.
+
+**In the shop:** you start standing near the door. Now he only gets away with ₹15 worth, not ₹35. The theft still happened — it's just smaller.
+
+**In the trade:** this is your **stop loss**. You decide *before* entering: "if my loss reaches ₹15, I'm out. I won't sit there and pay the full ₹35."
 
 ```
       15
@@ -64,9 +78,26 @@ That's it. Put your own numbers in.
    6  +  15
 ```
 
-You went from needing 85% to needing 71%. **You didn't sell one extra packet.** You just stopped the losses from getting big.
+**85% became 71%.**
 
-**Fix 2 — Raise your margin slightly.** Now you make ₹7.50 per sale instead of ₹6.
+And look carefully — you didn't sell a single extra packet. Same customers. Same sales. You only stopped the losses from growing.
+
+---
+
+### Fix 2 — Make a little more on each sale
+
+Right now you keep ₹6 per packet.
+
+**In the shop:** you raise your margin to ₹7.50 instead of ₹6.
+
+**In the trade:** this is a different lever — it's your **profit booking rule**.
+
+Here's the thing. If the trade goes perfectly to expiry, the full amount available is ₹15. But sitting until expiry carries risk. So you exit early and take a portion.
+
+- Earlier I was **booking at 40%** → 40% of ₹15 = **₹6**
+- Now I **wait until 50%** → 50% of ₹15 = **₹7.50**
+
+Slightly more patience. Each win is slightly bigger.
 
 ```
      15
@@ -76,6 +107,38 @@ You went from needing 85% to needing 71%. **You didn't sell one extra packet.** 
 
 **67%.**
 
+---
+
+### The full picture
+
+| What changed | How accurate I must be |
+|---|---|
+| Nothing | **85%** |
+| Cut the loss from ₹35 to ₹15 | **71%** |
+| + Booked profit at ₹7.50 instead of ₹6 | **67%** |
+
+From 85% down to 67% — that's **18 percentage points**. In trading, that's enormous.
+
+And where did it come from? Not a better entry. Not a better indicator. Just **two exit rules**:
+
+1. How much loss will I allow?
+2. At what profit will I get out?
+
+**Both are exits. Both are entirely in your control. Both can be decided before you place the trade.**
+
+---
+
+### This is the whole point
+
+> **Your exit rule decides how accurate you need to be. Your entry doesn't.**
+
+All of us spend our lives on entries. Which indicator, which candle, which support level, which setup from which video.
+
+Meanwhile the exit rule was quietly deciding whether the whole business could ever work — before a single trade was placed.
+
+I had never done this calculation for any strategy I had traded in my life. Not once.
+
+---
 ---
 
 ### Look at what actually moved the needle
