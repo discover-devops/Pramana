@@ -16,7 +16,9 @@ Here's the rewrite, in your voice:
 
 Everybody wants a strategy.
 
-We all carry the same belief: that somewhere out there is the right strategy, and the day I find it, my problems are solved. So we watch a hundred YouTube videos looking for the magic thing. Especially in option trading. And every few weeks you hear something in a video or a podcast and you think: **yes. This is it. This is the thing I was looking for.**
+We all carry the same belief: that somewhere out there is the right strategy, and the day I find it, my problems are solved. So we watch a hundred YouTube videos looking for the magic thing. 
+
+Especially in option trading. And every few weeks you hear something in a video or a podcast and you think: **yes. This is it. This is the thing I was looking for.**
 
 Then you start implementing it. You take a few losses. And you simply stop.
 
